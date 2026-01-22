@@ -1,0 +1,674 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --main-bg-color: #ba4949;
+  --secondary-bg-color: #ffffff1f;
+
+  --main-txt-color: #ffffff;
+  --secondary-txt-color: #f7f0f0ee;
+  --third-txt-color: #555555;
+  --fourth-txt-color: #7e7e7e8a;
+
+  --headerArea-height: 8vh;
+  --mainArea-height: calc(100vh - var(--headerArea-height));
+
+  --main-menuBorder-color: #7e7e7e57;
+
+  --svg-size: 1.1rem;
+}
+
+body {
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+/* HEADER */
+
+.containerHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--main-bg-color);
+  height: var(--headerArea-height);
+}
+
+.wrapperHeader {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 90%;
+  max-width: 600px;
+  min-height: 50px;
+  height: 100%;
+  max-height: 70px;
+}
+
+.wrapperLogo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--main-txt-color);
+}
+
+.wrapperLogo__logo {
+  margin-right: 5px;
+  height: 1.8rem;
+}
+
+.wrapperLogo__logoLabel {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.header__userSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__userSectionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-bg-color);
+  color: var(--secondary-txt-color);
+  padding: 5px 7.5px;
+  margin: 0px 5px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.header__userSectionButton:active {
+  position: relative;
+  top: 2px;
+}
+
+.headerUserSection__buttonLabel {
+  display: none;
+  font-weight: 550;
+}
+
+.header__userSectionSVG {
+  width: 1.4rem;
+}
+
+.wrapperHeader__progressBarSketch {
+  background-color: #00000021;
+  width: 100%;
+  height: 1px;
+}
+
+.progressBar {
+  width: 5%;
+  height: 2px;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+/* Main Area */
+
+.containerMainArea {
+  display: flex;
+  justify-content: center;
+  background-color: var(--main-bg-color);
+  min-height: var(--mainArea-height);
+}
+
+.containerFunctionalities {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 90%;
+  max-width: 500px;
+}
+
+.containerFunctionalities_pomodoroWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary-bg-color);
+  border-radius: 6px;
+  width: 100%;
+  min-height: 300px;
+  max-height: 340px;
+  margin: 35px 0px 15px 0px;
+}
+
+.timeButtonsControlWrapper {
+  display: flex;
+  list-style: none;
+}
+
+.timeButtonsControl {
+  color: var(--main-txt-color);
+  border-radius: 5px;
+  padding: 2px 15px;
+  cursor: pointer;
+}
+
+.pomodoroWrapper__timer {
+  margin: 5px 0px;
+}
+
+.timer__timeLeft {
+  font-size: clamp(105px, 7vw, 120px);
+  font-weight: 700;
+  color: var(--main-txt-color);
+}
+
+.timerButtonWrapper {
+  display: flex;
+  align-items: end;
+  height: 60px;
+}
+
+.timerButtonWrapper__button {
+  background-color: var(--main-txt-color);
+  color: var(--main-bg-color);
+  border: none;
+  border-bottom: 4px solid var(--secondary-bg-color);
+  padding: 17px 65px;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.timerButtonWrapper__button:active {
+  border: none;
+}
+
+/* Tasks */
+
+.currentPomodoro {
+  text-align: center;
+  margin: 5px 0px;
+}
+
+.currentPomodoro__counter {
+  font-size: 15px;
+  color: #ffffffa2;
+}
+
+.currentPomodoro__text {
+  font-weight: 600;
+  color: var(--main-txt-color);
+}
+
+.containerTaskList {
+}
+
+.headerTasklist {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: #fff 2px solid;
+  padding-bottom: 10px;
+  margin: 10px 0px;
+}
+
+.wrapperTitle__title {
+  color: var(--main-txt-color);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.TaskOptionsButton {
+  background-color: var(--secondary-bg-color);
+  border-radius: 5px;
+  padding: 5px;
+  border: none;
+}
+
+.TaskOptionsButton__svg {
+  color: var(--main-txt-color);
+  width: var(--svg-size);
+}
+
+.addTaskWrapper {
+  padding: 20px 0px;
+  margin-top: 15px;
+  border: 2px dashed #ffffff41;
+  border-radius: 8px;
+  font-weight: 700;
+  background-color: #00000010;
+  cursor: pointer;
+}
+
+.addTask {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--main-txt-color);
+}
+
+.addTask__svg {
+  width: 1.5rem;
+  color: #ffffff86;
+}
+
+.addTask__label {
+  margin: 0px 5px;
+}
+
+.AddNewTask {
+  background-color: #fff;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+.addNewTask__newTaskName {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-style: italic;
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 20px 0px;
+}
+
+.addNewTask__newTaskName::placeholder {
+  color: #55555550;
+}
+
+.numberOfTasks__title {
+  font-weight: 600;
+}
+
+.numberOfTasks__pomodoroQuantity {
+  display: flex;
+  margin: 15px 0px;
+}
+
+.numberOfTasksInput {
+  width: 15%;
+  padding: 8px 10px;
+  appearance: none;
+}
+
+.numberOfTasksInput::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+.pomodoroQuantity__containerValueSettingButtons {
+  display: flex;
+  margin: 0px 5px;
+}
+
+.valueSettingButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  box-shadow: #666666 0px 1px 4px 0px;
+  border: 5px;
+  margin: 0px 5px;
+  border-radius: 4px;
+}
+
+.valueSettingButtonsImg {
+  width: 15px;
+}
+
+.addNewTask__addNote {
+  font-size: 0.8em;
+  color: var(--third-txt-color);
+  cursor: pointer;
+}
+
+.addNewTask__note {
+  font-size: 1rem;
+  border: none;
+  background-color: #efefef;
+  padding: 15px;
+}
+
+.addNewTask__note:focus {
+  outline: none;
+}
+
+.addNewTaskCancelSave {
+  display: flex;
+  justify-content: end;
+  background-color: #efefef;
+  height: 100%;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.addNewTaskCancelSaveWrapperButtons {
+  height: 50px;
+}
+
+.addNewTaskCancelSave__button {
+  margin: 0px 4px;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  border: none;
+  opacity: 0.9;
+}
+
+.addNewTaskCancelSave__button:hover {
+  opacity: 1;
+}
+
+.addNewTaskCancelSave__button:active {
+  margin-top: 1px;
+}
+
+.addNewTaskCancelSave__button {
+  background-color: #fff;
+  color: var(--third-txt-color);
+}
+
+.taskList {
+}
+
+.task {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 10px 0px;
+}
+
+.taskList__taskInformation {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wrapperTaskListSVGAndName {
+  display: flex;
+  align-items: center;
+}
+
+.taskListSvgWrapper {
+  display: flex;
+}
+
+.taskListSvg {
+  margin-right: 5px;
+  width: 25px;
+}
+
+.taskName {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.remainingPomodoroAndChangeTaskWrapper {
+  display: flex;
+}
+
+.remainingPomodoro {
+  margin-right: 10px;
+}
+
+.remainingPomodoro > span {
+  font-weight: 700;
+  color: rgb(170, 170, 170);
+}
+
+.remainingPomodoro__iteratesPerformed {
+}
+
+.remainingPomodoro__remainingIterates {
+  font-size: 0.9em;
+}
+
+.changeTaskInformationWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.changeTaskInformationButton {
+  border: none;
+  border-radius: 3px;
+  box-shadow: #aaaaaa 0px 0px 0px 1px;
+  padding: 3px;
+  opacity: 0.5;
+}
+
+.changeTaskInformationSVG {
+  width: var(--svg-size);
+  font-size: var(--svg-size);
+}
+
+.taskNote {
+  display: flex;
+  justify-content: center;
+}
+
+.taskNote__text {
+  background: rgb(255, 255, 202);
+  border-radius: 5px;
+  box-shadow: #0000002d -1px 1px;
+  padding: 10px;
+  margin: 10px;
+  width: 100%;
+}
+
+/* Settings menu */
+
+.settingsWindow {
+  display: none;
+  position: fixed;
+  top: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(0, 0, 0, 0.3);
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.settingsMenu {
+  position: absolute;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 400px;
+  min-height: 90%;
+}
+
+.headerSettingsMenu__mainWrapper {
+  padding: 15px;
+}
+
+/* Settings menu header */
+
+.headerSettingsMenu {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--main-menuBorder-color);
+  padding: 15px;
+}
+
+.headerSettingsMenu__label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--third-txt-color);
+}
+
+.headerSettingsMenu__closeButton {
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.headerMenu__closeButtonSvg {
+  width: 1.2rem;
+}
+
+/* Settings menu Pomodoro config */
+
+.settingsMenu__mainWrapper {
+  padding: 15px;
+}
+
+.settingsMenu__mainWrapper > div {
+  border-bottom: 1px solid var(--main-menuBorder-color);
+}
+
+.timeSectionMenu {
+  padding: 5px 0px;
+}
+
+.timeSectionMenu__containerSetTimerPomodoro {
+}
+
+.timeSectionMenu__wrapperTitle {
+  display: flex;
+  margin: 8px 0px 12px 0px;
+}
+
+.timeSectionMenu__wrapperTitle__svg {
+  width: 1.2rem;
+  margin-right: 3px;
+}
+
+.timeSectionMenu__wrapperTitle__title {
+  font-weight: bold;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.31);
+}
+
+.timeSectionMenu__containerSetTimer {
+}
+
+.userSetTimer__title {
+  margin: 11px 0px;
+}
+
+.wrapperUserSetTimer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.userSetTimer {
+  width: 28%;
+}
+
+.userSetTimer__label {
+  color: var(--fourth-txt-color);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-wrap: nowrap;
+}
+
+.wrapperUserSetTimerInput {
+  width: 100%;
+}
+
+.userSetTimer__input {
+  padding: 10px;
+  width: 100%;
+}
+
+.timeSectionMenu__setBreaks {
+}
+
+.setBreaks__autoStartAndInterval {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0px;
+}
+
+.autoStartAndInterval__label {
+  margin: 10px 0px;
+}
+
+.autoStartAndInterval__button {
+  display: flex;
+  align-items: center;
+  width: 16%;
+  height: 30px;
+  padding: 5px 0px;
+  border-radius: 50px;
+  background-color: #cccccc;
+  cursor: pointer;
+}
+
+.autoStartAndInterval__button::before {
+  content: '';
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 13px;
+  margin: 0px 2px;
+}
+
+.autoStartAndInterval__input {
+  width: 18%;
+  padding: 8px;
+}
+
+/* Media queries */
+
+@media (max-width: 900px) {
+  .wrapperHeader,
+  .containerHeader__progressBarSketch {
+    width: 95%;
+  }
+}
+
+@media (min-width: 600px) {
+  .headerUserSection__buttonLabel {
+    display: block;
+  }
+}
+
+/* Efeitos */
+
+.--button:hover {
+  color: var(--main-txt-color);
+}
+
+.--labelMenu {
+  font-weight: 700;
+  color: #3b3b3b;
+}
+
+.--inputNumber {
+  border: none;
+  border-radius: 4px;
+  background-color: #00000013;
+  color: #00000063;
+  font-size: 16px;
+  font-weight: 700;
+  outline: none;
+}
+
+.--selectEffect {
+  background-color: #0000002f;
+  font-weight: 700;
+}
+
+.--buttonActive {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #9dd25c;
+}
+
+.--cancelButton {
+  background-color: #fff;
+  color: var(--third-txt-color);
+}
+
+.--saveButton {
+  background-color: rgb(34, 34, 34);
+  color: #fff;
+}
+
+.--taskActive {
+  border-left: #000 5px solid;
+}

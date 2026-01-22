@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tempo Diario Gasto</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="containerHeader">
+      <div class="wrapperHeader">
+        <a href="#" class="wrapperLogo">
+          <img src="/icons/logo/logo.svg" class="wrapperLogo__logo" alt="" />
+          <div class="wrapperLogo__logoLabel">Pomodoroom</div>
+        </a>
+        <div class="header__userSection">
+          <button class="header__userSectionButton" data-headerButtons="settings">
+            <img src="/icons/svgHeader/config.svg" class="header__userSectionSVG" alt="" />
+            <div class="headerUserSection__buttonLabel">Setting</div>
+          </button>
+          <button class="header__userSectionButton" data-headerButtons="login">
+            <img src="/icons/svgHeader/login.svg" class="header__userSectionSVG" alt="" />
+            <div class="headerUserSection__buttonLabel">Login</div>
+          </button>
+        </div>
+        <div class="wrapperHeader__progressBarSketch">
+          <div class="progressBar"></div>
+        </div>
+      </div>
+    </header>
+    <main class="containerMainArea">
+      <section class="containerFunctionalities">
+        <div class="containerFunctionalities_pomodoroWrapper">
+          <nav class="timeButtonsContainer">
+            <ul class="timeButtonsControlWrapper">
+              <li class="timeButtonsControl --selectEffect">
+                <span class="timeButtonsControlTextWrapper">Pomodoro</span>
+              </li>
+              <li class="timeButtonsControl"><span class="timeButtonsControlTextWrapper">Short Break</span></li>
+              <li class="timeButtonsControl"><span class="timeButtonsControlTextWrapper">Long Break</span></li>
+            </ul>
+          </nav>
+          <div class="pomodoroWrapper__timer">
+            <div class="timer__timeLeft">00:00</div>
+          </div>
+          <div class="timerButtonWrapper">
+            <button class="timerButtonWrapper__button">START</button>
+          </div>
+        </div>
+        <div class="currentPomodoro">
+          <div class="currentPomodoro__counter">#1</div>
+          <div class="currentPomodoro__text">Time to focus!</div>
+        </div>
+        <div class="containerTaskList">
+          <div class="headerTasklist">
+            <div class="headerTasklist__wrapperTitle"><span class="wrapperTitle__title">Tasks</span></div>
+            <div class="headerTasklist__wrapperTaskOptionsButton">
+              <button class="TaskOptionsButton">
+                <img src="/icons/svgHeader/verticalEllipsisWhite.svg" class="TaskOptionsButton__svg" alt="" />
+              </button>
+            </div>
+          </div>
+          <div class="taskList"></div>
+        <div class="addTaskWrapper">
+          <div class="addTask">
+            <img src="/icons/svgsMainArea/addTasks.svg" class="addTask__svg" alt="" />
+            <span class="addTask__label">Add Task</span>
+          </div>
+        </div>
+        <div class="addNewTaskWrapper" hidden="true">
+          <div class="AddNewTask">
+            <input type="text" class="addNewTask__newTaskName" placeholder="What are you working on?" />
+            <div class="numberOfTasks">
+              <span class="numberOfTasks__title">Est Pomodoros</span>
+              <div class="numberOfTasks__pomodoroQuantity">
+                <input type="number" class="numberOfTasksInput --inputNumber" value="1" min="0" step="1" />
+                <div class="pomodoroQuantity__containerValueSettingButtons">
+                  <div class="valueSettingButtons" data-action="add">
+                    <img
+                      src="/icons/svgsTasks/caretUpSvg.svg"
+                      alt=""
+                      class="valueSettingButtonsImg"
+                      data-buttonsConfigTaskQuantity="caretUp"
+                    />
+                  </div>
+                  <div class="valueSettingButtons" data-action="subtract">
+                    <img
+                      src="/icons/svgsTasks/caretDownSvg.svg"
+                      alt=""
+                      class="valueSettingButtonsImg"
+                      data-buttonsConfigTaskQuantity="caretDown"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span class="addNewTask__addNote">+ Add Note</span>
+                <textarea name="" id="" class="addNewTask__note" cols="30" rows="10" hidden="true"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="addNewTaskCancelSave">
+            <div class="addNewTaskCancelSaveWrapperButtons">
+              <button class="addNewTaskCancelSave__button --cancelButton">Cancel</button>
+            </div>
+            <div class="addNewTaskCancelSaveWrapperButtons">
+              <button class="addNewTaskCancelSave__button --saveButton">Save</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="settingsWindow">
+      <div class="settingsMenu">
+        <div class="headerSettingsMenu">
+          <div class="headerSettingsMenu__label">Setting</div>
+          <button class="headerSettingsMenu__closeButton">
+            <img src="/icons/settingsMenu/header/closeTab.svg" class="headerMenu__closeButtonSvg" alt="" />
+          </button>
+        </div>
+
+        <div class="settingsMenu__mainWrapper">
+          <div class="timeSectionMenu">
+            <div class="timeSectionMenu__wrapperTitle">
+              <img
+                src="/icons/settingsMenu/settingsMenuHeaderClock.svg"
+                alt=""
+                class="timeSectionMenu__wrapperTitle__svg"
+              />
+              <span class="timeSectionMenu__wrapperTitle__title">TIMER</span>
+            </div>
+
+            <div class="timeSectionMenu__containerUserSetTimer">
+              <div class="containerUserSetTimer__title --labelMenu">Time (minutes)</div>
+            </div>
+            <div class="wrapperUserSetTimer">
+              <div class="userSetTimer">
+                <label class="userSetTimer__label">Pomodoro</label>
+                <div class="wrapperUserSetTimerInput">
+                  <input
+                    type="number"
+                    name=""
+                    class="userSetTimer__input --inputNumber"
+                    value="25"
+                    data-timerDuration="pomodoroDuration"
+                  />
+                </div>
+              </div>
+              <div class="userSetTimer">
+                <label class="userSetTimer__label">Pausa curta</label>
+                <div class="wrapperUserSetTimerInput">
+                  <input
+                    type="number"
+                    name=""
+                    class="userSetTimer__input --inputNumber"
+                    value="5"
+                    data-timerDuration="shortBreakDuration"
+                  />
+                </div>
+              </div>
+              <div class="userSetTimer">
+                <label class="userSetTimer__label">Pausa longa</label>
+                <div class="wrapperUserSetTimerInput">
+                  <input
+                    type="number"
+                    name=""
+                    class="userSetTimer__input --inputNumber"
+                    value="15"
+                    data-timerDuration="longBreakDuration"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="timeSectionMenu__setBreaks">
+              <div class="setBreaks__autoStartAndInterval">
+                <div class="autoStartAndInterval__label --labelMenu" data-buttonAutoStart="breaks">
+                  Auto starts breaks
+                </div>
+                <div class="autoStartAndInterval__button" data-buttonAutoStart="pomodoros"></div>
+              </div>
+              <div class="setBreaks__autoStartAndInterval">
+                <div class="autoStartAndInterval__label --labelMenu">Auto starts Pomodoros</div>
+                <div class="autoStartAndInterval__button"></div>
+              </div>
+
+              <div class="setBreaks__autoStartAndInterval">
+                <div class="autoStartAndInterval__label --labelMenu">Long Break Interval</div>
+                <input type="number" name="" id="" value="4" class="autoStartAndInterval__input --inputNumber" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="scripts/pomodoroConfigs.js"></script>
+    <script src="scripts/generalSettings.js"></script>
+    <script src="scripts/effectsCss.js"></script>
+  </body>
+</html>
