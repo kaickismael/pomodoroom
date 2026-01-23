@@ -50,17 +50,6 @@ function taskSetNewTaskValue(t) {
   }
 }
 
-function setNewConfig() {
-  dashboard.timeLeft = currentWindowData()[2]
-  if (dashboard.timeLeft <= 0) endTime()
-  setTimer(dashboard.timeLeft)
-  dashboard.focusTimeData.timerDurationInSeconds =
-    document.querySelector("[data-timerDuration='pomodoroDuration']").value * 60
-  dashboard.shortBreakData.timerDurationInSeconds =
-    document.querySelector("[data-timerDuration='shortBreakDuration']").value * 60
-  dashboard.longBreakData.timerDurationInSeconds =
-    document.querySelector("[data-timerDuration='longBreakDuration']").value * 60
-}
 
 function closeTaskCreatorWindow(t) {
   const wrapperAddNewTask = document.querySelector('.addNewTaskWrapper')
@@ -154,3 +143,4 @@ function configTask(t) {
   } else if (t.target.classList.contains('changeTaskInformationButton')) {
   }
 }
+
