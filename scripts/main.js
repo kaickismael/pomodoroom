@@ -1,96 +1,118 @@
-function setInitialConfig() {
-  const timerButton = document.querySelector('.timerButtonWrapper__button')
-  const labelTimerPomodoro = document.querySelectorAll('.timeButtonsControl')
 
-  labelTimerPomodoro.forEach((element) => {
-    element.addEventListener('click', pomodoroSetter)
-  })
+const pomodoroomEngine = {
+    focusTimeData: {
+    timerDurationInSeconds: 60 * 60,
+    color: '#BA4949',
+  },
 
-  timerButton.addEventListener('click', changeStartAndPause)
-  setNewIterateConfig(dashboard.focusTimeData)
-}
+  shortBreakData: {
+    timerDurationInSeconds: 5 * 60,
+    color: '#38858A',
+  },
 
-function setNewIterateConfig(currentIterateData) {
-  setTimer(currentIterateData.timerDurationInSeconds)
-  setBackgroundColor(currentIterateData)
-  dashboard.timeLeft = currentIterateData.timerDurationInSeconds
-}
+  longBreakData: {
+    inputElementHtml: document.querySelector("[data-timerDuration='longBreakDuration']"),
+    timerDurationInSeconds: 20 * 60,
+    color: '#397097',
+  },
 
-function changeStartAndPause() {
-  const timerButton = document.querySelector('.timerButtonWrapper__button')
-  if (timerButton.textContent == 'START') {
-    setTimeout(() => {
-      startCounter(dashboard, timerButton)
-    }, 1000)
-    timerButton.textContent = 'PAUSE'
-  } else {
-    timerButton.textContent = 'START'
+  currentIterate: 1,
+  iterateForlongInterval: 4,
+  currentSession: 'FOCUSTIME',
+  currentSessionConfig: 0,
+  timeLeft: 0,
+  timeIsRunning: true,
+  autoStartBreaks: false,
+  autoStartPomodoros: false,
+  currentElementSession: 0,
+
+  changeCurrentElementSession: function(customValue) {
+    switch (this.currentSession) {
+      case customValue:
+        break;
+      case "FOCUSTIME":
+        if(this.currentIterate >= this.iterateForlongInterval) {
+        this.currentSession = "LONGBREAKSETTER"
+        this.currentSessionConfig = this.longBreakData
+        this.iterateForlongInterval = 0
+        this.timeLeft = this.longBreakDuration.timerDurationInSeconds
+        } else {
+        this.currentSession = "SHORTBREAK"
+        this.currentSessionConfig = this.shortBreakData
+        this.iterateForLongInterval++
+        this.timeLeft = this.longBreakDuration.timerDurationInSeconds
+        }        
+        break;
+      case "LONGBREAKSETTER":
+        this.currentSession = "FOCUSTIME"
+        this.currentSessionConfig = this.focusTimeData
+        break;
+      case "SHORTBREAK":
+        this.currentSession = "FOCUSTIME"
+        this.currentSessionConfig = this.focusTime
+        this.iterateForlongInterval++
+        break;
+      default:
+        break;
+    }
+  },
+
+  changeValues: function() {
+
+  },
+
+
+  getState: function() {
+    return {
+      currentIterate: this.currentIterate,
+      currentSession: this.currentSession,
+      timeLeft: this.timeLeft,
+      autoStartBreaks: this.autoStartBreaks,
+      autoStartPomodoros: this.autoStartPomodoros,
+      currentSession: this.currentSession,
+      currentElementSession: this.currentElementSession,
+      timeIsRunning: this.timeIsRunning,
+    }
+  },
+
+  tick: function() {
+    this.timeLeft--
+    return this.timeLeft
+  },
+  init: function() {
+    // Apenas para testes
+    this.currentIterate = 1;
+    this.iterateForlongInterval = 4;
+    this.currentSession = 'FOCUSTIME';
+    this.currentSessionConfig = this.focusTimeData;
+    this.timeLeft = this.focusTimeData.timerDurationInSeconds;
+    this.timeIsRunning = true;
+    this.autoStartBreaks = false;
+    this.autoStartPomodoros = false;
+    this.currentElementSession = this.focusTimeData;
   }
-}
+};
 
-function startCounter() {
-  const timerButton = document.querySelector('.timerButtonWrapper__button')
-  const counter = setInterval(() => {
-    if (timerButton.textContent == 'START') {
-      clearInterval(counter)
-    } else {
-      dashboard.timeLeft--
-      setTimer(dashboard.timeLeft)
+
+const timerController = {
+  intervalId: null,
+  countDown: function(timerValueCallback, renderPageCallback, pauseOnZero, timeInterval) {
+    this.intervalId = setInterval(() => {
+
+    const timerValue = pomodoroomEngine.tick()
+    dashboard.renderCountNumber(timerValue)
+
+    if(pauseOnZero && timerValue === 0) {
+      clearInterval(this.intervalId)
     }
+      
+      }, timeInterval)
 
-    if (dashboard.timeLeft == 0) {
-      changeStartAndPause()
-      clearInterval(counter)
-      endTime()
-    }
-  }, 1)
+  },
+
+  startCounter: function(counter, timeInterval) {
+  },
+  
+
 }
 
-function setTimer(totalTimeInSeconds) {
-  const timerInMinutes = Math.floor(totalTimeInSeconds / 60)
-  const TimerSeconds = totalTimeInSeconds % 60
-  const pomodoroTimeLeft = document.querySelector('.timer__timeLeft')
-  pomodoroTimeLeft.textContent = `${timerInMinutes.toString().padStart(2, 0)}:${TimerSeconds.toString().padStart(2, 0)}`
-}
-
-function endTime() {
-  if (dashboard.currentSession == 'FOCUSTIME') {
-    const iterateElement = document.querySelector('.currentPomodoro__counter')
-    dashboard.iterate++
-    iterateElement.textContent = `#` + dashboard.iterate
-    if (dashboard.iterate % 4 == 0) {
-      dashboard.currentSession = 'LONGBREAKSETTER'
-    } else {
-      dashboard.currentSession = 'SHORTBREAK'
-    }
-    if (dashboard.autoStartBreaks == true) {
-      changeStartAndPause()
-    }
-  } else {
-    dashboard.currentSession = 'FOCUSTIME'
-    if (dashboard.autoStartPomodoros == true) {
-      changeStartAndPause()
-    }
-  }
-  pomodoroSetter()
-}
-
-function setBackgroundColor(currentIterateData) {
-  const backgroundColor = document.querySelector(':root')
-  backgroundColor.style.setProperty('--main-bg-color', currentIterateData.color)
-}
-
-function pomodoroSetter(t) {
-  if (t) {dashboard.currentSession = t.target.textContent}
-  const currentWindow = currentWindowData()
-  setNewIterateConfig(currentWindow[0])
-  changeActiveBar(currentWindow[1])
-}
-
-function changeActiveBar(labelSection) {
-  const currentActive = document.querySelector('.--selectEffect')
-  currentActive.classList.remove('--selectEffect')
-  labelSection.classList.add('--selectEffect')
-}
-
-setInitialConfig()
