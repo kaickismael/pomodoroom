@@ -1,4 +1,3 @@
-
 const pomodoroomEngine = {
     focusTimeData: {
     timerDurationInSeconds: 60 * 60,
@@ -16,20 +15,19 @@ const pomodoroomEngine = {
     color: '#397097',
   },
 
-  currentIterate: 1,
-  iterateForlongInterval: 4,
-  currentSession: 'FOCUSTIME',
-  currentSessionConfig: 0,
-  timeLeft: 0,
-  timeIsRunning: true,
-  autoStartBreaks: false,
-  autoStartPomodoros: false,
-  currentElementSession: 0,
+  currentIterate: null,
+  iterateForlongInterval: null,
+  currentSession: null,
+  currentSessionConfig: null,
+  currentSessionColor: null,
+  timeLeft: null,
+  timeIsRunning: null,
+  autoStartBreaks: null,
+  autoStartPomodoros: null,
+  currentElementSession: null,
 
-  changeCurrentElementSession: function(customValue) {
+  timeoutCurrentElementSession: function(customValue) {
     switch (this.currentSession) {
-      case customValue:
-        break;
       case "FOCUSTIME":
         if(this.currentIterate >= this.iterateForlongInterval) {
         this.currentSession = "LONGBREAKSETTER"
@@ -57,10 +55,25 @@ const pomodoroomEngine = {
     }
   },
 
-  changeValues: function() {
-
+  manualBarChange: function(newSessionName) {
+    this.currentSession = newSessionName
+    switch (this.currentSession) {
+      case "FOCUSTIME":
+        this.currentSessionColor = this.focusTimeData.color
+        this.timeLeft = this.focusTimeData.color
+        break;
+      case "LONGBREAKSETTER":
+        this.currentSessionColor = this.shortBreakData.color
+        this.timeLeft = this.shortBreakData.color
+        break;
+      case "SHORTBREAK":
+        this.currentSessionColor = this.longBreakData.color
+        this.timeLeft = this.longBreakData.color
+        break;
+      default:
+        break;
+    }
   },
-
 
   getState: function() {
     return {
@@ -72,6 +85,7 @@ const pomodoroomEngine = {
       currentSession: this.currentSession,
       currentElementSession: this.currentElementSession,
       timeIsRunning: this.timeIsRunning,
+      currentSessionColor: this.currentSessionColor,
     }
   },
 
@@ -79,34 +93,49 @@ const pomodoroomEngine = {
     this.timeLeft--
     return this.timeLeft
   },
-  init: function() {
-    // Apenas para testes
+
+  toggleTimeState: function() {
+    if(this.timeIsRunning) {
+      this.timeIsRunning = false
+    } else {
+      this.timeIsRunning = true
+    }
+  },
+
+  init: function(currentIterate = 1, ) {
     this.currentIterate = 1;
     this.iterateForlongInterval = 4;
     this.currentSession = 'FOCUSTIME';
     this.currentSessionConfig = this.focusTimeData;
     this.timeLeft = this.focusTimeData.timerDurationInSeconds;
-    this.timeIsRunning = true;
+    this.timeIsRunning = false;
     this.autoStartBreaks = false;
     this.autoStartPomodoros = false;
     this.currentElementSession = this.focusTimeData;
+    this.currentSessionColor = this.focusTimeData.color
   }
 };
 
+pomodoroomEngine.init()
 
 const timerController = {
   intervalId: null,
-  countDown: function(timerValueCallback, renderPageCallback, pauseOnZero, timeInterval) {
+  countDown: function(currentEngineState, timeSpeed) {
+    pomodoroomEngine.toggleTimeState()
+    if(currentEngineState.timeIsRunning === true) {
+      clearInterval(this.intervalId)
+      return
+    }
     this.intervalId = setInterval(() => {
-
-    const timerValue = pomodoroomEngine.tick()
-    dashboard.renderCountNumber(timerValue)
+    const timerInSeconds = pomodoroomEngine.tick()
+    dashboard.renderTimerElement(timerInSeconds)
 
     if(pauseOnZero && timerValue === 0) {
       clearInterval(this.intervalId)
+      pomodoroomEngine.timeoutCurrentElementSession()
+      renderPage(pomodoroomEngine.getState())
     }
-      
-      }, timeInterval)
+    }, timeSpeed)
 
   },
 
@@ -115,4 +144,3 @@ const timerController = {
   
 
 }
-

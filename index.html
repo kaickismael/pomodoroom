@@ -37,10 +37,10 @@
           <nav class="timeButtonsContainer">
             <ul class="timeButtonsControlWrapper">
               <li class="timeButtonsControl --selectEffect">
-                <span class="timeButtonsControlTextWrapper">Pomodoro</span>
+                <span class="timeButtonsControlTextWrapper" data-session="FOCUSTIME">Pomodoro</span>
               </li>
-              <li class="timeButtonsControl"><span class="timeButtonsControlTextWrapper">Short Break</span></li>
-              <li class="timeButtonsControl"><span class="timeButtonsControlTextWrapper">Long Break</span></li>
+              <li class="timeButtonsControl" data-session="SHORTBREAK"><span class="timeButtonsControlTextWrapper">Short Break</span></li>
+              <li class="timeButtonsControl" data-session="LONGBREAKSETTER"><span class="timeButtonsControlTextWrapper">Long Break</span></li>
             </ul>
           </nav>
           <div class="pomodoroWrapper__timer">
@@ -201,6 +201,7 @@
     <script src="scripts/main.js"></script>
     <script src="scripts/dashboard.js"></script>
     <script src="scripts/pomodoroConfigs.js"></script>
+    <script src="scripts/actions.js"></script>
     <script src="scripts/generalSettings.js"></script>
     <script src="scripts/effectsCss.js"></script>
   </body>

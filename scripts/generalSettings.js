@@ -143,4 +143,3 @@ function configTask(t) {
   } else if (t.target.classList.contains('changeTaskInformationButton')) {
   }
 }
-
