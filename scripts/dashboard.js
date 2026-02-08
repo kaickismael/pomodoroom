@@ -24,11 +24,7 @@ const dashboard = {
     },
 
     changeActiveTabStyle: function(newTab) {
-      const newcurrentActiveTab = document.querySelector(`[data-session='${newTab}']`)
-      const currentActiveTab = document.querySelector('.--selectEffect')
-      if(currentActiveTab) {currentActiveTab.classList.remove('--selectEffect')}
       
-      newcurrentActiveTab.classList.add('--selectEffect')
     },
 
     setNewIterateConfig: function (currentIterateData) {
@@ -40,12 +36,12 @@ const dashboard = {
 
 function changeBarListener(newSession) {
   const currentStateEngine = pomodoroomEngine.getState()
-  if (currentStateEngine.currentSession === newSession.target.dataset.data-session) return
+  console.log(newSession.target.dataset.Session)
+  if (currentStateEngine.currentSession === newSession.target.dataset.datasession) return
   if(newSession) {
-    manualBarChange(newSession)
-    renderPage(pomodoroomEngine.getState())
+    pomodoroomEngine.manualBarChange(newSession)
+    dashboard.renderPage(pomodoroomEngine.getState())
   }
-
 }
 
 dashboard.renderPage(pomodoroomEngine.getState())

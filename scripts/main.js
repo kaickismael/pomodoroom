@@ -55,20 +55,23 @@ const pomodoroomEngine = {
     }
   },
 
-  manualBarChange: function(newSessionName) {
+  switchTabData: function(newSessionName) {
     this.currentSession = newSessionName
     switch (this.currentSession) {
       case "FOCUSTIME":
         this.currentSessionColor = this.focusTimeData.color
-        this.timeLeft = this.focusTimeData.color
+        this.timeLeft = this.focusTimeData.timerDurationInSeconds
+        this.currentSession = "FOCUSTIME"
         break;
       case "LONGBREAKSETTER":
         this.currentSessionColor = this.shortBreakData.color
-        this.timeLeft = this.shortBreakData.color
+        this.timeLeft = this.shortBreakData.timerDurationInSeconds
+        this.currentSession = "LONGBREAKSETTER"
         break;
       case "SHORTBREAK":
         this.currentSessionColor = this.longBreakData.color
-        this.timeLeft = this.longBreakData.color
+        this.timeLeft = this.longBreakData.timerDurationInSeconds
+        this.currentSession = "SHORTBREAK"
         break;
       default:
         break;
@@ -89,8 +92,8 @@ const pomodoroomEngine = {
     }
   },
 
-  tick: function() {
-    this.timeLeft--
+  tick: function(seconds) {
+    this.timeLeft += seconds
     return this.timeLeft
   },
 
@@ -120,27 +123,35 @@ pomodoroomEngine.init()
 
 const timerController = {
   intervalId: null,
-  countDown: function(currentEngineState, timeSpeed) {
-    pomodoroomEngine.toggleTimeState()
-    if(currentEngineState.timeIsRunning === true) {
-      clearInterval(this.intervalId)
-      return
-    }
-    this.intervalId = setInterval(() => {
-    const timerInSeconds = pomodoroomEngine.tick()
-    dashboard.renderTimerElement(timerInSeconds)
+  timeIsRunning: false,
+  startCounter: function(timeSpeed = 1000, callback) {
+    if(this.timeIsRunning === true) {return}
 
-    if(pauseOnZero && timerValue === 0) {
-      clearInterval(this.intervalId)
+    this.timeIsRunning = true
+    this.intervalId = setInterval(() => {
+      callback()
+    }, timeSpeed)
+  },
+
+  breakCounter: function() {
+    this.timeIsRunning = false
+    clearInterval(this.intervalId)
+  }
+}
+
+function endTimerPomodoro() {
       pomodoroomEngine.timeoutCurrentElementSession()
       renderPage(pomodoroomEngine.getState())
-    }
-    }, timeSpeed)
-
-  },
-
-  startCounter: function(counter, timeInterval) {
-  },
-  
-
 }
+
+function pomodoroTimerCounter(timeStep = 1, timeSpeed = 1000, timeEnd = 0) {
+    const timerInSeconds = pomodoroomEngine.tick(timeStep)
+    console.log(timerInSeconds)
+    dashboard.renderTimerElement(timerInSeconds)
+    if(timerInSeconds === timeEnd) {
+
+      timerController.breakCounter()
+    }
+    console.log('teste')
+}
+
