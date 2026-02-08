@@ -7,16 +7,19 @@ function setInitialEvents() {
   })
 
   timerButton.addEventListener('click', () => {
-    timerController.startCounter(1000, pomodoroTimerCounter(-1))
+    controller.toggleRunState()
   })
 }
 
 setInitialEvents()
 
-
 function changeBar(t) {
-  const newBarSessionName = t.currentTarget.dataset.session
+  const newBarSessionName = t.currentTarget? t.currentTarget.dataset.session : t
+  const engineCurrentState = pomodoroomEngine.getState()
+  if(newBarSessionName === engineCurrentState.currentSession) {return}
+  timerController.breakCounter()
   pomodoroomEngine.toggleTimeState()
+  console.log(newBarSessionName)
   pomodoroomEngine.switchTabData(newBarSessionName)
   dashboard.renderPage(pomodoroomEngine.getState())
 }
