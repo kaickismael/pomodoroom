@@ -3,7 +3,7 @@ function setInitialEvents() {
   const labelTimerPomodoro = document.querySelectorAll('.timeButtonsControl')
 
   labelTimerPomodoro.forEach((element) => {
-    element.addEventListener('click', changeBar)
+    element.addEventListener('click', changeBarListener)
   })
 
   timerButton.addEventListener('click', () => {
@@ -13,13 +13,7 @@ function setInitialEvents() {
 
 setInitialEvents()
 
-function changeBar(t) {
-  const newBarSessionName = t.currentTarget? t.currentTarget.dataset.session : t
-  const engineCurrentState = pomodoroomEngine.getState()
-  if(newBarSessionName === engineCurrentState.currentSession) {return}
-  timerController.breakCounter()
-  pomodoroomEngine.toggleTimeState()
-  console.log(newBarSessionName)
-  pomodoroomEngine.switchTabData(newBarSessionName)
-  dashboard.renderPage(pomodoroomEngine.getState())
+function changeBarListener(t) {
+  const newBarSessionName = t.currentTarget.dataset.session
+  controller.changeBar(newBarSessionName)
 }

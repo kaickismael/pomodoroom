@@ -1,21 +1,48 @@
 const controller = {
     toggleRunState: function() {
     const currentState = pomodoroomEngine.getState()
-    if(currentState.timeIsRunning === false && currentState.timeLeft >= 0) {
-        timerController.startCounter(1, pomodoroTimerRunningConfig)
-        pomodoroomEngine.toggleTimeState()
-    } else {
-        timerController.breakCounter()
-        pomodoroomEngine.toggleTimeState()
-    }
+    if(currentState.timeIsRunning === false) {this.initCounter()} 
+    else {this.stopCounter()}
+  },
+  initCounter() {
+    timerController.startCounter(1, this.pomodoroTimerRunningConfig)
+    this.updateButtonUI()
+  },
+
+  stopCounter() {
+    timerController.breakCounter()
+    this.updateButtonUI()
+  },
+
+  updateButtonUI() {
+    const newState = pomodoroomEngine.toggleTimeState()
+    dashboard.toggleNameButton(newState)
+  },
+
+  
+  pomodoroTimerRunningConfig: function() {
+      const timerInSeconds = pomodoroomEngine.tick(-1)
+      dashboard.renderTimerElement(timerInSeconds)
+      if (timerInSeconds === 0) {
+          controller.stopCounter()
+          pomodoroomEngine.timeoutCurrentElementSession()
+          controller.changeBar(pomodoroomEngine.currentElementSession)
+      }
+  },
+
+  changeBar(newBarSessionName) {
+    const engineCurrentState = pomodoroomEngine.getState()
+    if(newBarSessionName === engineCurrentState.currentSession) {return}
+    if(engineCurrentState.timeIsRunning) {controller.stopCounter()}
+    pomodoroomEngine.switchTabData(newBarSessionName)
+    dashboard.renderPage(pomodoroomEngine.getState())
   }
 }
 
 const timerController = {
   intervalId: null,
-  timeIsRunning: false,
   startCounter: function(timeSpeed = 1000, callback) {
-    if(this.timeIsRunning === true) {return}
+    if(this.intervalId !== null) {return}
 
     this.timeIsRunning = true
     this.intervalId = setInterval(() => {
@@ -24,17 +51,7 @@ const timerController = {
   },
 
   breakCounter: function() {
-    this.timeIsRunning = false
     clearInterval(this.intervalId)
+    this.intervalId = null
   }
-}
-
-function pomodoroTimerRunningConfig(timeStep = -1) {
-    const timerInSeconds = pomodoroomEngine.tick(timeStep)
-    dashboard.renderTimerElement(timerInSeconds)
-    if (timerInSeconds === 0) {
-        timerController.breakCounter()
-        pomodoroomEngine.timeoutCurrentElementSession()
-        changeBar(pomodoroomEngine.currentElementSession)
-    }
 }

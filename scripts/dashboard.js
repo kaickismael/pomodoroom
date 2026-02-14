@@ -51,13 +51,4 @@ const dashboard = {
 
 }
 
-function changeBarListener(newSession) {
-  const currentStateEngine = pomodoroomEngine.getState()
-  if (currentStateEngine.currentSession === newSession.target.dataset.datasession) return
-  if(newSession) {
-    pomodoroomEngine.manualBarChange(newSession)
-    dashboard.renderPage(pomodoroomEngine.getState())
-  }
-}
-
 dashboard.renderPage(pomodoroomEngine.getState())

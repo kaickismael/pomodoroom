@@ -28,7 +28,6 @@ const pomodoroomEngine = {
   currentElementSession: null,
 
   timeoutCurrentElementSession: function() {
-    console.log(this.iterateForlongInterval, this.currentIterateForlongInterval)
     switch (this.currentSession) {
       case "FOCUSTIME":
         this.currentIterate++
@@ -100,7 +99,7 @@ const pomodoroomEngine = {
     }
   },
 
-  tick: function(seconds) {
+  tick: function(seconds = - 1) {
     this.timeLeft += seconds
     return this.timeLeft
   },
@@ -111,6 +110,7 @@ const pomodoroomEngine = {
     } else {
       this.timeIsRunning = true
     }
+    return this.timeIsRunning
   },
 
   init: function(currentIterate = 1, ) {
