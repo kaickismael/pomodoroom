@@ -1,145 +1,316 @@
-const settingsButton = document.querySelector("[data-headerButtons='settings']")
-const settingsWindow = document.querySelector('.settingsWindow')
-const body = document.querySelector('body')
-const addTaskWrapper = document.querySelector('.addTaskWrapper')
-const buttonsAddNewTaskValue = document.querySelectorAll('.valueSettingButtons')
-const addNewTaskButtonsCancelSave = document.querySelectorAll('.addNewTaskCancelSave__button')
-const buttonTaskAddnote = document.querySelector('.addNewTask__addNote')
+const tasksState = {
+  tasks: [],
+  activeTask: null,
+  changeActiveTask: function(taskID) {
+    this.activeTask = this.tasks.find(element => element.taskID === taskID)
+    this.activeTask.taskIsFocus = true
+  },
 
-settingsButton.addEventListener('click', activeSettingsMenu)
-settingsWindow.addEventListener('click', disableSettingsMenu)
-addTaskWrapper.addEventListener('click', openTaskCreatorWindow)
-buttonTaskAddnote.addEventListener('click', addTaskNote)
+  addNewTask: function (newTaskName, numberOfTasks, taskNote) {
+      tasksState.tasks.push({
+      taskName: newTaskName,
+      numberOfTasks: numberOfTasks,
+      numberOfCompleteTasks: 0,
+      taskNote: taskNote,
+      taskID: crypto.randomUUID(),
+      taskIsFocus: tasksState.tasks.length === 0 ? true : false
+    })
 
-buttonsAddNewTaskValue.forEach((button) => {
-  button.addEventListener('click', taskSetNewTaskValue)
-})
-
-addNewTaskButtonsCancelSave.forEach((element) => element.addEventListener('click', closeTaskCreatorWindow))
-
-function activeSettingsMenu() {
-  body.style.overflow = 'hidden'
-  settingsWindow.style.display = 'flex'
-}
-
-function disableSettingsMenu(t) {
-  body.style.overflow = 'auto'
-  if (t.target.classList.value == 'settingsWindow' || t.target.classList.value == 'headerMenu__closeButtonSvg') {
-    setNewConfig()
-    settingsWindow.style.display = 'none'
-  }
-}
-
-function openTaskCreatorWindow() {
-  const wrapperAddNewTask = document.querySelector('.addNewTaskWrapper')
-  wrapperAddNewTask.hidden = false
-  addTaskWrapper.hidden = true
-  wrapperAddNewTask.addEventListener('click', setNewTask)
-}
-
-function setNewTask(t) {}
-
-function taskSetNewTaskValue(t) {
-  const addNewTaskInput = document.querySelector('.numberOfTasksInput ')
-  if (t.target.dataset.action == 'add' || t.target.parentElement.dataset.action == 'add') {
-    addNewTaskInput.value < 1 ? addNewTaskInput.setAttribute('step', 0.1) : addNewTaskInput.setAttribute('step', 1)
-    addNewTaskInput.stepUp()
-  } else {
-    addNewTaskInput.value <= 1 ? addNewTaskInput.setAttribute('step', 0.1) : addNewTaskInput.setAttribute('step', 1)
-    addNewTaskInput.stepDown()
-  }
-}
-
-
-function closeTaskCreatorWindow(t) {
-  const wrapperAddNewTask = document.querySelector('.addNewTaskWrapper')
-  const taskName = document.querySelector('.addNewTask__newTaskName')
-  const numberOfTasksInput = document.querySelector('.numberOfTasksInput')
-  const taskNote = document.querySelector('.addNewTask__note')
-  
-  if (t.target.textContent == 'Save') {
-    if (createNewTask() === false) {return}
-
-  } else if (t.target.textContent == 'Cancel') {
-    if(taskName.value || taskNote.value) {
-      const deleteInputData = window.confirm('The input data will be lost. Are you sure you want to close it?')
-      if(deleteInputData == false) {return}
+    if(tasksState.tasks.length === 1) {
+      tasksState.activeTask = tasksState.tasks[0]
     }
+  },
+    updateTaskData: function (newTaskData) {
+      const taskToChange = this.tasks.find(element => element.taskID === newTaskData.taskID)
+      taskToChange.taskName = newTaskData.taskName
+      taskToChange.numberOfTasks = newTaskData.numberOfTasks
+      taskToChange.numberOfCompleteTasks = newTaskData.numberOfCompleteTasks
+      taskToChange.taskNote = newTaskData.taskNote
+      return taskToChange
+  },  
+
+  returnTaskInfo: function(taskID) {
+      const taskInfo = this.tasks.find(element => element.taskID === taskID)
+      return taskInfo
+  },
+
+  clearFinishedTasks: function() {
+    const newtasks = tasksState.tasks.filter(element => element.numberOfTasks > element.numberOfCompleteTasks)
+    tasksState.tasks = newtasks
+    return tasksState.tasks
+  },
+
+  clearActPomodoros: function() {
+    tasksState.tasks.forEach(element => element.numberOfCompleteTasks = 0)
+    return tasksState.tasks
+  },
+
+  clearAllTasks: function() {
+    tasksState.tasks = []
+    console.log(tasksState)
   }
-
-
-  addTaskWrapper.hidden = false
-  wrapperAddNewTask.hidden = true
-
-  taskName.value = ''
-  numberOfTasksInput.value = 1
-  taskNote.value = ''
 }
 
-function createNewTask() {
+const tasksController = {
+  changeNumberOfTasks: function(t) {
+    const numberOfTasks= document.querySelector('.numberOfTasksInput')
+    if(t.currentTarget.dataset.action === 'add') {
+      numberOfTasks.value ++
+    } else if (t.currentTarget.dataset.action === 'subtract' && numberOfTasks.value > 1) {
+        numberOfTasks.value --
+    }
+  },
+  
+  showNotes: function(t) {
+      const newTaskNote = document.querySelector('.addNewTask__note')
+      newTaskNote.hidden = false
+      t.currentTarget.hidden = true
+    },
+
+  saveTask: function(t) {
+    const newTaskName = document.querySelector('.addNewTask__newTaskName')
+    const numberOfTasks = document.querySelector('.numberOfTasksInput')
+    const taskNote = document.querySelector('.addNewTask__note')
+    if(newTaskName.value === '' && t.currentTarget.dataset.buttoncreatenewtask === 'save') return
+    if(t.currentTarget.dataset.buttoncreatenewtask === "save") {
+      tasksState.addNewTask(newTaskName.value, numberOfTasks.value, taskNote.value)
+      tasksView.renderTask(tasksState.tasks[tasksState.tasks.length - 1])
+    } 
+    newTaskName.value = ''
+    numberOfTasks.value = 1
+    taskNote.value = ''
+    tasksController.toggleCreatorOfTasks()
+  },
+
+ changeActiveTask: function(t) {
   const taskList = document.querySelector('.taskList')
-  const taskName = document.querySelector('.addNewTask__newTaskName')
-  if (!taskName.value) {
-    return false
+  const currentActiveTask = taskList.querySelector('.--taskActive')
+  if(currentActiveTask && currentActiveTask != t.currentTarget) {
+    tasksState.changeActiveTask(t.currentTarget.id)
+    currentActiveTask.classList.remove('--taskActive')
+    t.currentTarget.classList.add('--taskActive')
   }
-  const numberOfTasksInput = document.querySelector('.numberOfTasksInput')
-  const taskNote = document.querySelector('.addNewTask__note')
-  console.log(document.querySelector('.task'))
-  const IsFirstTask = document.querySelector('.task') == null ? '--taskActive' : ''
-  const taskNoteHTML =
-    taskNote.value == false
-      ? ''
-      : `
-  <div class="taskNote">
-  <div class="taskNote__text">
-    ${taskNote.value}
-  </div>
-  `
-  const task = document.createElement('div')
-  task.innerHTML += `
-  <div class="task ${IsFirstTask}">
-  <div class="taskList__taskInformation">
-    <div class="wrapperTaskListSVGAndName">
-      <div class="taskListSvgWrapper">
-        <img class="taskListSvg" src="/icons/svgsTasks/logoBlack.svg" alt="" />
-      </div>
-      <div class="taskName">${taskName.value}</div>
-    </div>
-    <div class="remainingPomodoroAndChangeTaskWrapper">
-      <div class="remainingPomodoro">
-        <span class="remainingPomodoro__iteratesPerformed">0</span>
-        <span class="remainingPomodoro__remainingIterates">/ ${numberOfTasksInput.value}</span>
-      </div>
-      <div class="changeTaskInformationWrapper">
-        <button class="changeTaskInformationButton">
-          <img class="changeTaskInformationSVG" src="/icons/svgsTasks/verticalEllipsisBlack.svg" alt="" />
-        </button>
-      </div>
-    </div>
-  </div>
-  ${taskNoteHTML}
-  </div>
-  `
-  task.addEventListener('click', configTask)
-  taskList.appendChild(task)
+  },
+
+  openTaskManager: function(t) {
+    const taskWrapper = t.currentTarget.closest('.taskWrapper')
+    const currentTask = t.currentTarget.closest('.task')
+    const taskToUpdate = tasksState.returnTaskInfo(currentTask.id)
+    const taskConfigElement = templates.taskManagerTemplate(taskToUpdate)
+
+    taskWrapper.dataset.state = 'editMode'
+    currentTask.hidden = true
+    taskWrapper.innerHTML += taskConfigElement
+    event.stopPropagation()
+  },
+
+  changeTaskData: function(t) {
+    const taskList = document.querySelector('.taskList')
+    const taskWrapperElement = taskList.querySelector('[data-state="editMode"]')
+    const taskEditor = taskWrapperElement.querySelector('.addNewTaskWrapper')
+    const taskData = {
+      taskID: taskWrapperElement.querySelector('.task').id,
+      taskName: taskEditor.querySelector('.addNewTask__newTaskName').value,
+      taskNote: taskEditor.querySelector('.addNewTask__note').value,
+      numberOfTasks: taskEditor.querySelector('.numberOfTasksInput').value,
+      numberOfCompleteTasks: taskEditor.querySelector('.numberOfCompleteTasksInput').value
+    }
+
+    if(t.currentTarget.innerText === "Save" && taskData.taskName === '') return
+    if(t.currentTarget.innerText === "Save") {
+      const taskWithNewData = tasksState.updateTaskData(taskData)
+      taskWrapperElement.querySelector('.task').remove()
+      tasksView.renderTask(taskWithNewData, true)
+      taskWrapperElement.removeAttribute('data-state')
+    }  else {taskWrapperElement.querySelector('.task').hidden = false}
+      taskEditor.remove()
+  },
+
+ toggleCreatorOfTasks: function() {
+    const taskSetInfo = document.querySelector('.addNewTaskWrapper')
+    taskSetInfo.hidden = taskSetInfo.hidden ? false : true
+  },
+
+  handleSessionFinished: function() {
+  if(!tasksState.activeTask) {return}
+  tasksState.activeTask.numberOfCompleteTasks ++
+  console.log(tasksState.activeTask.numberOfCompleteTasks)
+  tasksView.renderTasksCompletes(tasksState.activeTask.numberOfCompleteTasks, tasksState.activeTask.taskID)
+  },
+
+  openWindowTasksConfigs(t) {
+    const tasksSettingsWindow = document.querySelector('.tasksSettingsWindow')
+    tasksSettingsWindow.hidden = tasksSettingsWindow.hidden ? false : true
+  },
+
+  clearFinishedTasks(t) {
+    const newTasks = tasksState.clearFinishedTasks()
+    const taskList = document.querySelector('.taskList')
+    taskList.innerHTML = ''
+    newTasks.forEach(element => {
+      tasksView.renderTask(element)
+    });
+  },
+
+  actPomodorosButton() {
+    const resetTasks = tasksState.clearActPomodoros()
+    const taskList = document.querySelector('.taskList')
+    taskList.innerHTML = ''
+    resetTasks.forEach(element => {
+      tasksView.renderTask(element)
+    });
+  },
+
+  clearAllTasksButton() {
+    console.log('teste')
+    tasksState.clearAllTasks()
+    const taskList = document.querySelector('.taskList')
+    taskList.innerHTML = ''
+  },
+
+  
+
+  initEventListeners: function() {
+  const addTask = document.querySelector('.addTaskWrapper')
+  const addNewTaskWrapper = document.querySelector('.addNewTaskWrapper')
+  const valueSettingButtons = document.querySelectorAll('.valueSettingButtons')
+  const addNotes = document.querySelector('.addNewTask__addNote')
+  const taskButtons = document.querySelectorAll('.addNewTaskCancelSaveWrapperButtons')
+  const taskOptionsButton = document.querySelector('.headerTasklist__wrapperTaskOptionsButton')
+  const tasksSettingsWindow = document.querySelector('.tasksSettingsWindow')
+  const clearFinishedTasksButton = document.querySelector('.tasksSettingsWindow__clearFinishedTasks')
+  const actPomodorosButton = document.querySelector('.tasksSettingsWindow__actPomodoros')
+  const clearAllTasksButton = document.querySelector('.tasksSettingsWindow__clearAllTasks')
+
+  addTask.addEventListener('click', tasksController.toggleCreatorOfTasks)
+  valueSettingButtons[0].addEventListener('click', tasksController.changeNumberOfTasks)
+  valueSettingButtons[1].addEventListener('click', tasksController.changeNumberOfTasks)
+  taskButtons[0].addEventListener('click', tasksController.saveTask)
+  taskButtons[1].addEventListener('click', tasksController.saveTask)
+  addNewTaskWrapper.addEventListener('click', tasksController.newTaskCreatorConfigs)
+  addNotes.addEventListener('click', tasksController.showNotes)
+  taskOptionsButton.addEventListener('click', tasksController.openWindowTasksConfigs)
+  clearFinishedTasksButton.addEventListener('click', tasksController.clearFinishedTasks)
+  actPomodorosButton.addEventListener('click', tasksController.actPomodorosButton)
+  clearAllTasksButton.addEventListener('click', tasksController.clearAllTasksButton)
+
+  },
 }
 
-function addTaskNote() {
-  const taskNote = document.querySelector('.addNewTask__note')
-  taskNote.hidden = false
-  buttonTaskAddnote.hidden = true
+
+
+const tasksView = {
+  renderTask(task, changingTask = false) {
+    if(changingTask) {
+      const taskWrapper = document.querySelector('[data-state="editMode"]')
+      const taskElement = templates.taskTemplate(task)
+      taskWrapper.innerHTML = taskElement
+    } else {
+      const taskWrapper = document.createElement('div')
+      const taskList = document.querySelector('.taskList')
+      taskWrapper.classList.add('taskWrapper')
+      taskWrapper.innerHTML += templates.taskTemplate(task)
+      taskList.appendChild(taskWrapper)
+    }
+  },
+
+  renderTaskOnEspecificPosition(task, position, element) {
+    const taskList = document.querySelector('.taskList')
+    const taskElement = tasksView.taskTemplete(task)
+    element.insertAdjacentElement(position, taskElement)
+  },
+
+  renderTasksCompletes(tasksValue, taskID) {
+    const activeTask = document.getElementById(`${taskID}`)
+    const iteratesPerformed = activeTask.querySelector('.remainingPomodoro__iteratesPerformed')
+    iteratesPerformed.textContent = tasksValue
+  },
+
+  renderNewActiveTask() {
+
+  },
+
+  renderNewTaskValue(taskID) {
+    const taskList = document.querySelector('.taskList')
+    const task = taskList.getElementById(taskID)
+    const taskName = task.querySelector('.taskName')
+    const taskremainingPomodoros = task.querySelector('.remainingPomodoro__iteratesPerformed')
+    const taskIterates = task.querySelector('.remainingPomodoro__remainingIterates')
+    const taskNotes = task.querySelector('.taskNote')
+  },
 }
 
-function configTask(t) {
-  const task = t.target.parentElement
-  const oldActiveElement = document.querySelector('.--taskActive')
 
-  if (t.target.classList.contains('task')) {
-    oldActiveElement.classList.remove('--taskActive')
-    t.target.classList.add('--taskActive')
-  } else if (t.target.classList.contains('taskList__taskInformation')) {
-    oldActiveElement.classList.remove('--taskActive')
-    t.target.parentElement.classList.add('--taskActive')
-  } else if (t.target.classList.contains('changeTaskInformationButton')) {
+const templates = {
+  taskTemplate: function(taskData) {
+       return `<div class="task ${taskData.taskIsFocus ? '--taskActive' : ''}" id="${taskData.taskID}" onclick='tasksController.changeActiveTask(event)'>
+    <div class="taskList__taskInformation">
+      <div class="wrapperTaskListSVGAndName">
+        <div class="taskListSvgWrapper">
+          <img class="taskListSvg" src="./icons/svgsTasks/logoBlack.svg" alt="" />
+        </div>
+        <div class="taskName">${taskData.taskName}</div>
+      </div>
+      <div class="remainingPomodoroAndChangeTaskWrapper">
+        <div class="remainingPomodoro">
+          <span class="remainingPomodoro__iteratesPerformed">${taskData.numberOfCompleteTasks}</span>
+          <span> / </span>
+          <span class="remainingPomodoro__remainingIterates">${taskData.numberOfTasks}</span>
+        </div>
+        <div class="changeTaskInformationWrapper" onclick="tasksController.openTaskManager(event)">
+          <button class="changeTaskInformationButton">
+            <img class="changeTaskInformationSVG" src="./icons/svgsTasks/verticalEllipsisBlack.svg" alt=""/>
+          </button>
+        </div>
+      </div>
+        <p class="taskNote">${taskData.taskNote}</p>
+    </div>
+    </div>`
+  },
+
+  taskManagerTemplate: function(taskData) {
+    return `<div class="addNewTaskWrapper">
+          <div class="AddNewTask">
+            <input type="text" class="addNewTask__newTaskName" value="${taskData.taskName ? taskData.taskName : ''}" placeholder="What are you working on?" />
+            <div class="numberOfTasks">
+              <span class="numberOfTasks__title">Act / </span>
+              <span class="numberOfTasks__title">Est Pomodoros</span>
+              <div class="numberOfTasks__pomodoroQuantity">
+                <input type="number" class="numberOfCompleteTasksInput --inputNumber" value="${taskData.numberOfCompleteTasks != undefined ? taskData.numberOfCompleteTasks : ''}" min="0" step="1"/>
+                <input type="number" class="numberOfTasksInput --inputNumber" value="${taskData.numberOfTasks}" min="0" step="1" />
+                <div class="pomodoroQuantity__containerValueSettingButtons">
+                  <div class="valueSettingButtons" data-action="add" onclick="tasksController.changeNumberOfTasks(event)">
+                    <img
+                      src="./icons/svgsTasks/caretUpSvg.svg"
+                      alt=""
+                      class="valueSettingButtonsImg"
+                      data-buttonsConfigTaskQuantity="caretUp"
+                    />
+                  </div>
+                  <div class="valueSettingButtons" data-action="subtract" onclick="tasksController.changeNumberOfTasks(event)">
+                    <img
+                      src="./icons/svgsTasks/caretDownSvg.svg"
+                      alt=""
+                      class="valueSettingButtonsImg"
+                      data-buttonsConfigTaskQuantity="caretDown"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span class="addNewTask__addNote" onclick="tasksController.showNotes(event)" ${taskData.taskNote ? 'hidden': ''}>+ Add Note</span>
+                <textarea name="" id="" class="addNewTask__note" cols="30" rows="10" placeholder="Some notes..." ${taskData.taskNote ? '' : 'hidden'}>${taskData.taskNote}</textarea>
+              </div>
+            </div>
+          </div>
+          <div class="addNewTaskCancelSave">
+            <div class="addNewTaskCancelSaveWrapperButtons" data-buttonCreateNewTask="cancel">
+              <button class="addNewTaskCancelSave__button --cancelButton" onclick="tasksController.changeTaskData(event)">Cancel</button>
+            </div>
+            <div class="addNewTaskCancelSaveWrapperButtons" data-buttonCreateNewTask="save">
+              <button class="addNewTaskCancelSave__button --saveButton" onclick="tasksController.changeTaskData(event)">Save</button>
+            </div>
+          </div>
+        </div>`
   }
 }

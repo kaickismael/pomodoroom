@@ -88,6 +88,10 @@ body {
   top: 2px;
 }
 
+.header__userSectionButton[data-headerbuttons="login"] {
+  display: none;
+}
+
 .headerUserSection__buttonLabel {
   display: none;
   font-weight: 550;
@@ -104,7 +108,7 @@ body {
 }
 
 .progressBar {
-  width: 5%;
+  width: 0px;
   height: 2px;
   border-radius: 3px;
   background-color: #fff;
@@ -192,6 +196,7 @@ body {
 }
 
 .currentPomodoro__counter {
+  cursor: pointer;
   font-size: 15px;
   color: #ffffffa2;
 }
@@ -199,6 +204,75 @@ body {
 .currentPomodoro__text {
   font-weight: 600;
   color: var(--main-txt-color);
+}
+
+.wrapperWindowCounterChange {
+  display: none;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.windowCounterChange {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 300px;
+  height: 200px;
+  padding: 15px 0px;
+}
+
+.windowCounterChange__counterIterate {
+  display: flex;
+  width: 80%;
+}
+
+.windowCounterChange__wrapperTitle {
+  border-bottom: 2px solid var(--main-menuBorder-color);
+}
+
+.windowCounterChange__title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--fourth-txt-color);
+}
+
+.windowCounterChange__iterates {
+}
+
+.windowCounterChange__iteratesInput {
+  width: 40%;
+  padding: 10px;
+  margin: 0px 10px;
+}
+ 
+.windowCounterChange__wrapperSvg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  box-shadow: #666666 0px 1px 4px 0px;
+  border: none;
+  margin: 0px 5px;
+  border-radius: 4px;
+}
+
+.windowCounterChange__svg {
+  width: 15px;
+}
+
+.windowCounterChang__buttonsExit {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
 }
 
 .containerTaskList {
@@ -218,16 +292,46 @@ body {
   font-weight: 700;
 }
 
-.TaskOptionsButton {
+.taskOptionsButton {
   background-color: var(--secondary-bg-color);
   border-radius: 5px;
   padding: 5px;
   border: none;
 }
 
-.TaskOptionsButton__svg {
+.taskOptionsButton__svg {
   color: var(--main-txt-color);
   width: var(--svg-size);
+}
+
+.headerTasklist__wrapperTaskOptionsButton {
+  position: relative;
+}
+
+.tasksSettingsWindow {
+  position: absolute;
+  background-color: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  right: 0;
+  margin-top: 5px;
+  width: 200px;
+  padding: 10px;
+  z-index: 1;
+}
+
+.tasksSettingsWindow > div {
+  padding: 5px 0px;
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.tasksSettingsWindow > div:hover {
+  transition: 0.1s;
+  background-color: rgb(235, 235, 235);
+}
+
+.windowCounterChange__svg {
+  width: 20px;
 }
 
 .addTaskWrapper {
@@ -293,6 +397,12 @@ body {
   appearance: none;
 }
 
+.numberOfCompleteTasksInput {
+  width: 15%;
+  padding: 8px 10px;
+  margin-right: 5px;
+}
+
 .numberOfTasksInput::-webkit-inner-spin-button {
   appearance: none;
 }
@@ -302,13 +412,14 @@ body {
   margin: 0px 5px;
 }
 
+
 .valueSettingButtons {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
   box-shadow: #666666 0px 1px 4px 0px;
-  border: 5px;
+  border: none;
   margin: 0px 5px;
   border-radius: 4px;
 }
@@ -350,12 +461,7 @@ body {
 }
 
 .addNewTaskCancelSave__button {
-  margin: 0px 4px;
-  padding: 12px 20px;
-  border-radius: 5px;
-  font-weight: 600;
-  border: none;
-  opacity: 0.9;
+
 }
 
 .addNewTaskCancelSave__button:hover {
@@ -367,8 +473,7 @@ body {
 }
 
 .addNewTaskCancelSave__button {
-  background-color: #fff;
-  color: var(--third-txt-color);
+
 }
 
 .taskList {
@@ -384,6 +489,8 @@ body {
 .taskList__taskInformation {
   display: flex;
   justify-content: space-between;
+  align-content: space-between;
+  flex-wrap: wrap;
 }
 
 .wrapperTaskListSVGAndName {
@@ -402,7 +509,7 @@ body {
 
 .taskName {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .remainingPomodoroAndChangeTaskWrapper {
@@ -428,6 +535,14 @@ body {
 .changeTaskInformationWrapper {
   display: flex;
   align-items: center;
+}
+
+.taskNote {
+  display: block;
+  flex-basis: 100%;
+  font-size: 0.9rem;
+  background-color: rgb(255, 209, 209);
+  margin-top: 10px;
 }
 
 .changeTaskInformationButton {
@@ -472,6 +587,8 @@ body {
 }
 
 .settingsMenu {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   background-color: #fff;
   border-radius: 8px;
@@ -481,6 +598,18 @@ body {
 
 .headerSettingsMenu__mainWrapper {
   padding: 15px;
+}
+
+.settingsMenu__buttonSaveWrapper {
+  display: inline;
+  margin-top: auto;
+  margin-left: auto;
+  padding: 10px;
+}
+
+.settingsMenu__buttonSave {
+  display: block;
+  margin: 10px;
 }
 
 /* Settings menu header */
@@ -662,11 +791,23 @@ body {
 .--cancelButton {
   background-color: #fff;
   color: var(--third-txt-color);
+  margin: 0px 4px;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  border: none;
+  opacity: 0.9;
 }
 
 .--saveButton {
   background-color: rgb(34, 34, 34);
   color: #fff;
+  margin: 0px 4px;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  border: none;
+  opacity: 0.9;
 }
 
 .--taskActive {

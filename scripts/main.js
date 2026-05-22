@@ -1,24 +1,29 @@
+const SESSION = {
+  FOCUS: 'FOCUS',
+  BREAK: 'BREAK',
+  LONGBREAK: 'LONGBREAK'
+}
+
 const pomodoroomEngine = {
     focusTimeData: {
-    timerDurationInSeconds: 1 * 60,
+    timerDurationInSeconds: null,
     color: '#BA4949',
   },
 
   shortBreakData: {
-    timerDurationInSeconds: 5 * 60,
+    timerDurationInSeconds: null,
     color: '#38858A',
   },
 
   longBreakData: {
-    inputElementHtml: document.querySelector("[data-timerDuration='longBreakDuration']"),
-    timerDurationInSeconds: 20 * 60,
+    timerDurationInSeconds: null,
     color: '#397097',
   },
 
   currentIterate: null,
   iterateForlongInterval: null,
   currentIterateForlongInterval: null,
-  currentSession: null,
+  currentSessionName: null,
   currentSessionConfig: null,
   currentSessionColor: null,
   timeLeft: null,
@@ -28,57 +33,47 @@ const pomodoroomEngine = {
   currentElementSession: null,
 
   timeoutCurrentElementSession: function() {
-    switch (this.currentSession) {
-      case "FOCUSTIME":
+    switch (this.currentSessionName) {
+      case SESSION.FOCUS:
         this.currentIterate++
         if(this.currentIterateForlongInterval >= this.iterateForlongInterval) {
-        this.currentSession = "LONGBREAKSETTER"
-        this.currentSessionConfig = this.longBreakData
         this.currentIterateForlongInterval = 1
-        this.timeLeft = this.longBreakData.timerDurationInSeconds
-        this.currentSessionColor = this.longBreakData.color
+        this.switchTabData(SESSION.LONGBREAK)
         } else {
-        this.currentSession = "SHORTBREAK"
-        this.currentSessionConfig = this.shortBreakData
         this.currentIterateForlongInterval++
-        this.timeLeft = this.shortBreakData.timerDurationInSeconds
-        this.currentSessionColor = this.shortBreakData.color
+        this.switchTabData(SESSION.BREAK)
         }
         break;
-      case "LONGBREAKSETTER":
-        this.currentSession = "FOCUSTIME"
-        this.currentSessionConfig = this.focusTimeData
-        this.timeLeft = this.focusTimeData.timerDurationInSeconds
-        this.currentSessionColor = this.focusTimeData.color
+      case SESSION.LONGBREAK:
+        this.switchTabData(SESSION.FOCUS)
         break;
-      case "SHORTBREAK":
-        this.currentSession = "FOCUSTIME"
-        this.currentSessionConfig = this.focusTime
-        this.timeLeft = this.focusTimeData.timerDurationInSeconds
-        this.currentSessionColor = this.focusTimeData.color
+      case SESSION.BREAK:
+        this.switchTabData(SESSION.FOCUS)
         break;
       default:
         break;
     }
   },
 
-  switchTabData: function(customValue = this.currentSession) {
-    console.log(customValue)
+  switchTabData: function(customValue = this.currentSessionName) {
     switch (customValue) {
-      case "FOCUSTIME":
+      case SESSION.FOCUS:
         this.currentSessionColor = this.focusTimeData.color
         this.timeLeft = this.focusTimeData.timerDurationInSeconds
-        this.currentSession = "FOCUSTIME"
+        this.currentSessionName = SESSION.FOCUS
+        this.currentSessionConfig = this.focusTimeData
         break;
-      case "SHORTBREAK":
+      case SESSION.BREAK:
         this.currentSessionColor = this.shortBreakData.color
         this.timeLeft = this.shortBreakData.timerDurationInSeconds
-        this.currentSession = "SHORTBREAK"
+        this.currentSessionName = SESSION.BREAK
+        this.currentSessionConfig = this.shortBreakData
         break;
-      case "LONGBREAKSETTER":
+      case SESSION.LONGBREAK:
         this.currentSessionColor = this.longBreakData.color
         this.timeLeft = this.longBreakData.timerDurationInSeconds
-        this.currentSession = "LONGBREAKSETTER"
+        this.currentSessionName = SESSION.LONGBREAK
+        this.currentSessionConfig = this.longBreakData
         break;
       default:
         break;
@@ -88,14 +83,14 @@ const pomodoroomEngine = {
   getState: function() {
     return {
       currentIterate: this.currentIterate,
-      currentSession: this.currentSession,
+      currentSessionName: this.currentSessionName,
       timeLeft: this.timeLeft,
       autoStartBreaks: this.autoStartBreaks,
       autoStartPomodoros: this.autoStartPomodoros,
-      currentSession: this.currentSession,
       currentElementSession: this.currentElementSession,
       timeIsRunning: this.timeIsRunning,
       currentSessionColor: this.currentSessionColor,
+      currentSessionConfig: this.currentSessionConfig,
     }
   },
 
@@ -104,33 +99,51 @@ const pomodoroomEngine = {
     return this.timeLeft
   },
 
-  toggleTimeState: function() {
-    if(this.timeIsRunning) {
-      this.timeIsRunning = false
-    } else {
-      this.timeIsRunning = true
-    }
-    return this.timeIsRunning
-  },
+  init: function(config) {
+    const currentConfigs = menuController.getAllConfigValues()
+    this.iterateForlongInterval = currentConfigs.iterationsForInterval
+    this.autoStartBreaks = currentConfigs.autoStartBreaks
+    this.autoStartPomodoros = currentConfigs.autoStartPomodoro
+    this.focusTimeData.timerDurationInSeconds = currentConfigs.focusTimeValueInSeconds
+    this.shortBreakData.timerDurationInSeconds = currentConfigs.breakTimeValueInSeconds
+    this.longBreakData.timerDurationInSeconds = currentConfigs.longBreakTimeValueInSeconds
 
-  init: function(currentIterate = 1, ) {
+    this.timeLeft = currentConfigs.focusTimeValueInSeconds
     this.currentIterate = 1
-    this.iterateForlongInterval = 4
     this.currentIterateForlongInterval = 1
-    this.currentSession = 'FOCUSTIME'
+    this.currentSessionName = SESSION.FOCUS
     this.currentSessionConfig = this.focusTimeData
-    this.timeLeft = this.focusTimeData.timerDurationInSeconds
     this.timeIsRunning = false
-    this.autoStartBreaks = false
-    this.autoStartPomodoros = false
     this.currentElementSession = this.focusTimeData
     this.currentSessionColor = this.focusTimeData.color
+  },
+
+  updateCurrentSettings: function(currentConfigs, applyThisSession) {
+    this.iterateForlongInterval = currentConfigs.iterationsForInterval
+    this.autoStartBreaks = currentConfigs.autoStartBreaks
+    this.autoStartPomodoros = currentConfigs.autoStartPomodoro
+    this.focusTimeData.timerDurationInSeconds = currentConfigs.focusTimeValueInSeconds
+    this.shortBreakData.timerDurationInSeconds = currentConfigs.breakTimeValueInSeconds
+    this.longBreakData.timerDurationInSeconds = currentConfigs.longBreakTimeValueInSeconds
+    if(applyThisSession) {this.switchTabData(this.currentSessionName)}
+  },
+
+  getConfigData: function() {
+    return {
+      focusTimeData: this.focusTimeData,
+      shortBreakData: this.shortBreakData,
+      longBreakData: this.longBreakData
+    }
+  },
+
+  changeCurrentIterate(newIterate) {
+    if(newIterate > pomodoroomEngine.iterateForlongInterval) {
+        pomodoroomEngine.currentIterateForlongInterval = newIterate % pomodoroomEngine.iterateForlongInterval
+    } else {
+    pomodoroomEngine.currentIterateForlongInterval = newIterate
+    }
+    pomodoroomEngine.currentIterate = newIterate
   }
-};
+}
 
 pomodoroomEngine.init()
-
-
-
-
-

@@ -2,8 +2,8 @@ const dashboard = {
     renderPage: function(currentEngineData) {
       this.renderTimerElement(currentEngineData.timeLeft)
       this.renderMainColor(currentEngineData.currentSessionColor)
-      this.renderCounterIterate(currentEngineData.currentIterate, currentEngineData.currentSession)
-      this.changeActiveTabStyle(currentEngineData.currentSession)
+      this.renderCounterIterate(currentEngineData.currentIterate, currentEngineData.currentSessionName)
+      this.changeActiveTabStyle(currentEngineData.currentSessionName)
       this.toggleNameButton(currentEngineData.timeIsRunning)
     },
 
@@ -19,13 +19,11 @@ const dashboard = {
       rootElement.style.setProperty("--main-bg-color", newColor)
     },
 
-    renderCounterIterate: function(newIterate, currentSession) {
-      if(currentSession === 'FOCUSTIME') {
+    renderCounterIterate: function(newIterate, currentSessionName) {
+      if(currentSessionName === SESSION.FOCUS || currentSessionName === "changingIterateData") {
       const counterIterateElement = document.querySelector('.currentPomodoro__counter')
-      console.log(counterIterateElement)
       counterIterateElement.innerHTML = `#${newIterate}`
       }
-
     },
 
     changeActiveTabStyle: function(newTab) {
@@ -48,7 +46,6 @@ const dashboard = {
     setTimerOnScreen(currentIterateData.timeLeft)
     setBackgroundColor(currentIterateData)
   },
-
 }
 
 dashboard.renderPage(pomodoroomEngine.getState())

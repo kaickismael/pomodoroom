@@ -13,16 +13,16 @@
     <header class="containerHeader">
       <div class="wrapperHeader">
         <a href="#" class="wrapperLogo">
-          <img src="/icons/logo/logo.svg" class="wrapperLogo__logo" alt="" />
+          <img src="./icons/logo/logo.svg" class="wrapperLogo__logo" alt="" />
           <div class="wrapperLogo__logoLabel">Pomodoroom</div>
         </a>
         <div class="header__userSection">
           <button class="header__userSectionButton" data-headerButtons="settings">
-            <img src="/icons/svgHeader/config.svg" class="header__userSectionSVG" alt="" />
+            <img src="./icons/svgHeader/config.svg" class="header__userSectionSVG" alt="" />
             <div class="headerUserSection__buttonLabel">Setting</div>
           </button>
-          <button class="header__userSectionButton" data-headerButtons="login">
-            <img src="/icons/svgHeader/login.svg" class="header__userSectionSVG" alt="" />
+          <button class="header__userSectionButton" data-headerButtons="login" hidden>
+            <img src="./icons/svgHeader/login.svg" class="header__userSectionSVG" alt="" />
             <div class="headerUserSection__buttonLabel">Login</div>
           </button>
         </div>
@@ -36,11 +36,11 @@
         <div class="containerFunctionalities_pomodoroWrapper">
           <nav class="timeButtonsContainer">
             <ul class="timeButtonsControlWrapper">
-              <li class="timeButtonsControl --selectEffect" data-session="FOCUSTIME">
+              <li class="timeButtonsControl --selectEffect" data-session="FOCUS">
                 <span class="timeButtonsControlTextWrapper">Pomodoro</span>
               </li>
-              <li class="timeButtonsControl" data-session="SHORTBREAK"><span class="timeButtonsControlTextWrapper">Short Break</span></li>
-              <li class="timeButtonsControl" data-session="LONGBREAKSETTER"><span class="timeButtonsControlTextWrapper">Long Break</span></li>
+              <li class="timeButtonsControl" data-session="BREAK"><span class="timeButtonsControlTextWrapper">Short Break</span></li>
+              <li class="timeButtonsControl" data-session="LONGBREAK"><span class="timeButtonsControlTextWrapper">Long Break</span></li>
             </ul>
           </nav>
           <div class="pomodoroWrapper__timer">
@@ -53,24 +53,49 @@
         <div class="currentPomodoro">
           <div class="currentPomodoro__counter">#1</div>
           <div class="currentPomodoro__text">Time to focus!</div>
+          <div class="wrapperWindowCounterChange">
+            <div class="windowCounterChange">
+              <div class="windowCounterChange__wrapperTitle">
+                <h1 class="windowCounterChange__title">EDIT POMODORO COUNT</h1>
+              </div>
+              <div class="windowCounterChange__counterIterate">
+                <input type="number" min="1" class="windowCounterChange__iteratesInput --inputNumber">
+                <button class="windowCounterChange__wrapperSvg" data-updateIterateValue="caretDown">
+                  <img src="./icons/svgsTasks/caretDownSvg.svg" class="windowCounterChange__svg" alt="">
+                </button>
+                <button class="windowCounterChange__wrapperSvg" data-updateIterateValue="caretUp">
+                  <img src="./icons/svgsTasks//caretUpSvg.svg" class="windowCounterChange__svg" alt="">
+                </button>
+              </div>
+              <div class="windowCounterChang__buttonsExit">
+                <button class="buttonsExit__buttons --cancelButton" data-buttonName="cancel">Clear</button>
+                <button class="buttonsExit__buttons --saveButton" data-buttonName="save">Save</button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="containerTaskList">
           <div class="headerTasklist">
             <div class="headerTasklist__wrapperTitle"><span class="wrapperTitle__title">Tasks</span></div>
             <div class="headerTasklist__wrapperTaskOptionsButton">
-              <button class="TaskOptionsButton">
-                <img src="/icons/svgHeader/verticalEllipsisWhite.svg" class="TaskOptionsButton__svg" alt="" />
+              <button class="taskOptionsButton">
+                <img src="./icons/svgHeader/verticalEllipsisWhite.svg" class="taskOptionsButton__svg" alt="" />
               </button>
+              <div class="tasksSettingsWindow" hidden>
+                <div class="tasksSettingsWindow__clearFinishedTasks">Clear finished tasks</div>
+                <div class="tasksSettingsWindow__actPomodoros">Clear act pomodoros</div>
+                <div class="tasksSettingsWindow__clearAllTasks">Clear all Tasks</div>
+              </div>
             </div>
           </div>
           <div class="taskList"></div>
         <div class="addTaskWrapper">
           <div class="addTask">
-            <img src="/icons/svgsMainArea/addTasks.svg" class="addTask__svg" alt="" />
+            <img src="./icons/svgsMainArea/addTasks.svg" class="addTask__svg" alt="" />
             <span class="addTask__label">Add Task</span>
           </div>
         </div>
-        <div class="addNewTaskWrapper" hidden="true">
+        <div class="addNewTaskWrapper" hidden>
           <div class="AddNewTask">
             <input type="text" class="addNewTask__newTaskName" placeholder="What are you working on?" />
             <div class="numberOfTasks">
@@ -80,7 +105,7 @@
                 <div class="pomodoroQuantity__containerValueSettingButtons">
                   <div class="valueSettingButtons" data-action="add">
                     <img
-                      src="/icons/svgsTasks/caretUpSvg.svg"
+                      src="./icons/svgsTasks/caretUpSvg.svg"
                       alt=""
                       class="valueSettingButtonsImg"
                       data-buttonsConfigTaskQuantity="caretUp"
@@ -88,7 +113,7 @@
                   </div>
                   <div class="valueSettingButtons" data-action="subtract">
                     <img
-                      src="/icons/svgsTasks/caretDownSvg.svg"
+                      src="./icons/svgsTasks/caretDownSvg.svg"
                       alt=""
                       class="valueSettingButtonsImg"
                       data-buttonsConfigTaskQuantity="caretDown"
@@ -98,15 +123,15 @@
               </div>
               <div>
                 <span class="addNewTask__addNote">+ Add Note</span>
-                <textarea name="" id="" class="addNewTask__note" cols="30" rows="10" hidden="true"></textarea>
+                <textarea name="" id="" class="addNewTask__note" cols="30" rows="10" placeholder="Some notes..." hidden></textarea>
               </div>
             </div>
           </div>
           <div class="addNewTaskCancelSave">
-            <div class="addNewTaskCancelSaveWrapperButtons">
+            <div class="addNewTaskCancelSaveWrapperButtons" data-buttonCreateNewTask="cancel">
               <button class="addNewTaskCancelSave__button --cancelButton">Cancel</button>
             </div>
-            <div class="addNewTaskCancelSaveWrapperButtons">
+            <div class="addNewTaskCancelSaveWrapperButtons" data-buttonCreateNewTask="save">
               <button class="addNewTaskCancelSave__button --saveButton">Save</button>
             </div>
           </div>
@@ -114,12 +139,12 @@
       </section>
     </main>
 
-    <div class="settingsWindow">
+    <div class="settingsWindow" hidden>
       <div class="settingsMenu">
         <div class="headerSettingsMenu">
           <div class="headerSettingsMenu__label">Setting</div>
           <button class="headerSettingsMenu__closeButton">
-            <img src="/icons/settingsMenu/header/closeTab.svg" class="headerMenu__closeButtonSvg" alt="" />
+            <img src="./icons/settingsMenu/header/closeTab.svg" class="headerMenu__closeButtonSvg" alt="" />
           </button>
         </div>
 
@@ -127,7 +152,7 @@
           <div class="timeSectionMenu">
             <div class="timeSectionMenu__wrapperTitle">
               <img
-                src="/icons/settingsMenu/settingsMenuHeaderClock.svg"
+                src="./icons/settingsMenu/settingsMenuHeaderClock.svg"
                 alt=""
                 class="timeSectionMenu__wrapperTitle__svg"
               />
@@ -195,15 +220,17 @@
             </div>
           </div>
         </div>
+        <div class="settingsMenu__buttonSaveWrapper"><button class="settingsMenu__buttonSave --saveButton">Save</button></div>
       </div>
     </div>
     
+    <script src="scripts/menu.js"></script>
     <script src="scripts/main.js"></script>
     <script src="scripts/dashboard.js"></script>
     <script src="scripts/pomodoroConfigs.js"></script>
-    <script src="scripts/actions.js"></script>
-    <script src="scripts/generalSettings.js"></script>
     <script src="scripts/effectsCss.js"></script>
     <script src="scripts/controller.js"></script>
+    <script src="scripts/generalSettings.js"></script>
+    <script src="scripts/actions.js"></script>
   </body>
 </html>
